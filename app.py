@@ -1,4 +1,15 @@
 # ── Title ──
+import streamlit as st
+import numpy as np
+import json
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+
+st.set_page_config(
+    page_title="LeafScan",
+    page_icon="🌿",
+    layout="centered"
+)
 st.title("🌿 LeafScan")
 st.caption("AI-powered plant disease detection system using Deep Learning (MobileNetV2)")
 
