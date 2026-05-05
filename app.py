@@ -62,9 +62,9 @@ if uploaded:
 
         # ── Result ──
         if is_healthy:
-            st.success(f"Healthy ✅")
+            st.success("Healthy ✅")
         else:
-            st.error(f"Disease Detected ⚠️")
+            st.error("Disease Detected ⚠️")
 
         st.subheader(disease)
         st.caption(f"Plant: {plant}")
@@ -72,7 +72,7 @@ if uploaded:
         st.progress(int(confidence))
         st.write(f"Confidence: {confidence:.2f}%")
 
-        # Top 3
+        # Top 3 Predictions
         st.markdown("### Top Predictions")
         top3 = np.argsort(preds[0])[::-1][:3]
 
@@ -83,3 +83,16 @@ if uploaded:
 
 else:
     st.info("Upload an image to start")
+
+# ── Footer ──
+st.markdown("---")
+st.markdown(
+    """
+    <div style='text-align:center; font-size:13px; color:#888;'>
+        🌿 <b>LeafScan</b><br>
+        Developed by <b>Nada Elmokdem</b><br>
+        MIT License © 2026
+    </div>
+    """,
+    unsafe_allow_html=True
+)
