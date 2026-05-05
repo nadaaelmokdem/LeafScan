@@ -16,7 +16,7 @@
 
 ---
 
-**[🚀 Live Demo](#)** · **[📄 Research Paper](#)** · **[🐛 Report Bug](../../issues)** · **[💡 Request Feature](../../issues)**
+**[🚀 Live Demo](#https://leafscan-z77czej6zgogjfecfyhqrv.streamlit.app/)** · **[📄 Research Paper](#)** · **[💡 Request Feature](../../issues)**
 
 </div>
 
