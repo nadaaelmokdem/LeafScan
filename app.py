@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import numpy as np
 import json
 from tensorflow.keras.models import load_model
@@ -466,7 +467,83 @@ if uploaded:
               </div>
             </div>"""
 
-        st.markdown(f"""
+        card_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+        <style>
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{ font-family: 'Jost', sans-serif; background: transparent; }}
+        .ls-result {{
+            background: #fff; border: 1px solid #D4CBBF; border-radius: 16px;
+            overflow: hidden; animation: slideUp 0.35s ease;
+        }}
+        @keyframes slideUp {{
+            from {{ opacity: 0; transform: translateY(10px); }}
+            to   {{ opacity: 1; transform: translateY(0); }}
+        }}
+        .ls-result-header {{
+            display: flex; align-items: center; gap: 12px;
+            padding: 1.25rem 1.5rem; border-bottom: 1px solid #EDE8DF;
+        }}
+        .ls-dot {{ width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }}
+        .ls-dot-healthy  {{ background: #97C459; }}
+        .ls-dot-diseased {{ background: #E24B4A; }}
+        .ls-status {{
+            font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+            text-transform: uppercase; margin-bottom: 3px; display: block;
+        }}
+        .ls-status-healthy  {{ color: #3B6D11; }}
+        .ls-status-diseased {{ color: #A32D2D; }}
+        .ls-tag {{
+            display: inline-block; font-size: 10px; padding: 2px 9px;
+            border-radius: 99px; font-weight: 500; letter-spacing: 0.04em;
+        }}
+        .ls-tag-healthy  {{ background: rgba(99,153,34,0.1); color: #27500A; border: 1px solid rgba(99,153,34,0.25); }}
+        .ls-tag-diseased {{ background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }}
+        .ls-disease-name {{
+            font-family: 'Playfair Display', serif; font-size: 20px;
+            color: #2C1F0E; font-weight: 400; line-height: 1.2; margin: 4px 0 0;
+        }}
+        .ls-plant-name {{ font-size: 12px; color: #5C3D1E; font-weight: 300; margin: 3px 0 0; }}
+        .ls-confidence {{ padding: 1rem 1.5rem; border-bottom: 1px solid #EDE8DF; }}
+        .ls-conf-row {{
+            display: flex; justify-content: space-between;
+            align-items: baseline; margin-bottom: 8px;
+        }}
+        .ls-conf-label {{
+            font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #5C3D1E; font-weight: 400;
+        }}
+        .ls-conf-value {{
+            font-family: 'Playfair Display', serif; font-size: 20px; color: #2C1F0E;
+        }}
+        .ls-track {{ height: 5px; background: #EDE8DF; border-radius: 3px; overflow: hidden; }}
+        .ls-fill {{ height: 5px; border-radius: 3px; }}
+        .ls-fill-healthy  {{ background: linear-gradient(90deg, #3B6D11, #97C459); }}
+        .ls-fill-diseased {{ background: linear-gradient(90deg, #A32D2D, #E24B4A); }}
+        .ls-preds {{ padding: 1rem 1.5rem 1.25rem; }}
+        .ls-preds-label {{
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+            color: #5C3D1E; font-weight: 500; margin-bottom: 10px;
+        }}
+        .ls-pred-row {{
+            display: flex; align-items: center; gap: 10px;
+            padding: 6px 0; border-bottom: 1px solid #F7F3EC;
+        }}
+        .ls-pred-row:last-child {{ border-bottom: none; }}
+        .ls-pred-rank {{ font-size: 11px; color: #D4CBBF; width: 16px; text-align: center; font-weight: 300; }}
+        .ls-pred-name {{ flex: 1; }}
+        .ls-pred-disease {{ font-size: 13px; font-weight: 500; color: #2C1F0E; }}
+        .ls-pred-plant   {{ font-size: 11px; color: #5C3D1E; font-weight: 300; }}
+        .ls-pred-bar     {{ width: 80px; }}
+        .ls-pred-track   {{ height: 3px; background: #EDE8DF; border-radius: 2px; margin-bottom: 3px; }}
+        .ls-pred-fill    {{ height: 3px; border-radius: 2px; background: #97C459; }}
+        .ls-pred-pct     {{ font-size: 11px; color: #5C3D1E; text-align: right; display: block; font-weight: 300; }}
+        </style>
+        </head>
+        <body>
         <div class="ls-result">
           <div class="ls-result-header">
             <div class="ls-dot {dot_cls}"></div>
@@ -479,23 +556,24 @@ if uploaded:
               <p class="ls-plant-name">{plant}</p>
             </div>
           </div>
-
           <div class="ls-confidence">
             <div class="ls-conf-row">
               <span class="ls-conf-label">Confidence</span>
               <span class="ls-conf-value">{confidence:.1f}%</span>
             </div>
             <div class="ls-track">
-              <div class="ls-fill {fill_cls}" style="height:5px;border-radius:3px;width:{bar_width}%"></div>
+              <div class="ls-fill {fill_cls}" style="width:{bar_width}%"></div>
             </div>
           </div>
-
           <div class="ls-preds">
             <div class="ls-preds-label">Top predictions</div>
             {pred_rows_html}
           </div>
         </div>
-        """, unsafe_allow_html=True)
+        </body>
+        </html>
+        """
+        components.html(card_html, height=320, scrolling=False)
 
 else:
     st.info("Upload a leaf image to start analysis.")
