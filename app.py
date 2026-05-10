@@ -321,13 +321,42 @@ div[data-testid="stSpinner"] > div {
 
 /* ── Footer ── */
 .ls-footer {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
+    margin-top: 3rem;
+    padding: 2.5rem 2rem 3rem;
     border-top: 1px solid #D4CBBF;
     text-align: center;
+    background: #EDE8DF;
+    border-radius: 16px 16px 0 0;
 }
-.ls-footer p { font-size: 12px; color: #5C3D1E; line-height: 2; font-weight: 300; }
-.ls-footer strong { color: #2C1F0E; font-weight: 500; }
+.ls-footer-app {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #1C3A1A;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.75rem;
+}
+.ls-footer-by {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8C7B6B;
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+.ls-footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #2C1F0E;
+    margin-bottom: 1rem;
+}
+.ls-footer-license {
+    font-size: 11px;
+    color: #A89880;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -467,17 +496,31 @@ if uploaded:
               </div>
             </div>"""
 
+        # height: header~100 + confidence~80 + preds label~30 + 3 rows*52 + padding~20
+        card_height = 100 + 80 + 30 + (len(top3) * 52) + 20
+
         card_html = f"""
         <!DOCTYPE html>
         <html>
         <head>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
         <style>
+        /* Force light mode — never inherit OS dark mode */
+        :root {{ color-scheme: light only; }}
         * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-        body {{ font-family: 'Jost', sans-serif; background: transparent; }}
+        body {{
+            font-family: 'Jost', sans-serif;
+            background: #F7F3EC !important;
+            color: #2C1F0E !important;
+            -webkit-color-scheme: light;
+            color-scheme: light;
+        }}
         .ls-result {{
-            background: #fff; border: 1px solid #D4CBBF; border-radius: 16px;
-            overflow: hidden; animation: slideUp 0.35s ease;
+            background: #ffffff !important;
+            border: 1px solid #D4CBBF;
+            border-radius: 16px;
+            overflow: hidden;
+            animation: slideUp 0.35s ease;
         }}
         @keyframes slideUp {{
             from {{ opacity: 0; transform: translateY(10px); }}
@@ -485,62 +528,67 @@ if uploaded:
         }}
         .ls-result-header {{
             display: flex; align-items: center; gap: 12px;
-            padding: 1.25rem 1.5rem; border-bottom: 1px solid #EDE8DF;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #EDE8DF;
+            background: #ffffff !important;
         }}
         .ls-dot {{ width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }}
-        .ls-dot-healthy  {{ background: #97C459; }}
-        .ls-dot-diseased {{ background: #E24B4A; }}
+        .ls-dot-healthy  {{ background: #97C459 !important; }}
+        .ls-dot-diseased {{ background: #E24B4A !important; }}
         .ls-status {{
             font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
             text-transform: uppercase; margin-bottom: 3px; display: block;
         }}
-        .ls-status-healthy  {{ color: #3B6D11; }}
-        .ls-status-diseased {{ color: #A32D2D; }}
+        .ls-status-healthy  {{ color: #3B6D11 !important; }}
+        .ls-status-diseased {{ color: #A32D2D !important; }}
         .ls-tag {{
             display: inline-block; font-size: 10px; padding: 2px 9px;
             border-radius: 99px; font-weight: 500; letter-spacing: 0.04em;
         }}
-        .ls-tag-healthy  {{ background: rgba(99,153,34,0.1); color: #27500A; border: 1px solid rgba(99,153,34,0.25); }}
-        .ls-tag-diseased {{ background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }}
+        .ls-tag-healthy  {{ background: rgba(99,153,34,0.1) !important; color: #27500A !important; border: 1px solid rgba(99,153,34,0.25); }}
+        .ls-tag-diseased {{ background: #FCEBEB !important; color: #A32D2D !important; border: 1px solid #F09595; }}
         .ls-disease-name {{
             font-family: 'Playfair Display', serif; font-size: 20px;
-            color: #2C1F0E; font-weight: 400; line-height: 1.2; margin: 4px 0 0;
+            color: #2C1F0E !important; font-weight: 400; line-height: 1.2; margin: 4px 0 0;
         }}
-        .ls-plant-name {{ font-size: 12px; color: #5C3D1E; font-weight: 300; margin: 3px 0 0; }}
-        .ls-confidence {{ padding: 1rem 1.5rem; border-bottom: 1px solid #EDE8DF; }}
+        .ls-plant-name {{ font-size: 12px; color: #5C3D1E !important; font-weight: 300; margin: 3px 0 0; }}
+        .ls-confidence {{
+            padding: 1rem 1.5rem; border-bottom: 1px solid #EDE8DF;
+            background: #ffffff !important;
+        }}
         .ls-conf-row {{
             display: flex; justify-content: space-between;
             align-items: baseline; margin-bottom: 8px;
         }}
         .ls-conf-label {{
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: 0.1em; color: #5C3D1E; font-weight: 400;
+            letter-spacing: 0.1em; color: #5C3D1E !important; font-weight: 400;
         }}
         .ls-conf-value {{
-            font-family: 'Playfair Display', serif; font-size: 20px; color: #2C1F0E;
+            font-family: 'Playfair Display', serif; font-size: 20px; color: #2C1F0E !important;
         }}
-        .ls-track {{ height: 5px; background: #EDE8DF; border-radius: 3px; overflow: hidden; }}
+        .ls-track {{ height: 5px; background: #EDE8DF !important; border-radius: 3px; overflow: hidden; }}
         .ls-fill {{ height: 5px; border-radius: 3px; }}
-        .ls-fill-healthy  {{ background: linear-gradient(90deg, #3B6D11, #97C459); }}
-        .ls-fill-diseased {{ background: linear-gradient(90deg, #A32D2D, #E24B4A); }}
-        .ls-preds {{ padding: 1rem 1.5rem 1.25rem; }}
+        .ls-fill-healthy  {{ background: linear-gradient(90deg, #3B6D11, #97C459) !important; }}
+        .ls-fill-diseased {{ background: linear-gradient(90deg, #A32D2D, #E24B4A) !important; }}
+        .ls-preds {{ padding: 1rem 1.5rem 1.25rem; background: #ffffff !important; }}
         .ls-preds-label {{
             font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-            color: #5C3D1E; font-weight: 500; margin-bottom: 10px;
+            color: #5C3D1E !important; font-weight: 500; margin-bottom: 10px;
         }}
         .ls-pred-row {{
             display: flex; align-items: center; gap: 10px;
-            padding: 6px 0; border-bottom: 1px solid #F7F3EC;
+            padding: 6px 0; border-bottom: 1px solid #F0EBE3 !important;
         }}
-        .ls-pred-row:last-child {{ border-bottom: none; }}
-        .ls-pred-rank {{ font-size: 11px; color: #D4CBBF; width: 16px; text-align: center; font-weight: 300; }}
+        .ls-pred-row:last-child {{ border-bottom: none !important; }}
+        .ls-pred-rank {{ font-size: 11px; color: #C4B8AB !important; width: 16px; text-align: center; font-weight: 300; }}
         .ls-pred-name {{ flex: 1; }}
-        .ls-pred-disease {{ font-size: 13px; font-weight: 500; color: #2C1F0E; }}
-        .ls-pred-plant   {{ font-size: 11px; color: #5C3D1E; font-weight: 300; }}
+        .ls-pred-disease {{ font-size: 13px; font-weight: 500; color: #2C1F0E !important; }}
+        .ls-pred-plant   {{ font-size: 11px; color: #5C3D1E !important; font-weight: 300; }}
         .ls-pred-bar     {{ width: 80px; }}
-        .ls-pred-track   {{ height: 3px; background: #EDE8DF; border-radius: 2px; margin-bottom: 3px; }}
-        .ls-pred-fill    {{ height: 3px; border-radius: 2px; background: #97C459; }}
-        .ls-pred-pct     {{ font-size: 11px; color: #5C3D1E; text-align: right; display: block; font-weight: 300; }}
+        .ls-pred-track   {{ height: 3px; background: #EDE8DF !important; border-radius: 2px; margin-bottom: 3px; }}
+        .ls-pred-fill    {{ height: 3px; border-radius: 2px; background: #97C459 !important; }}
+        .ls-pred-pct     {{ font-size: 11px; color: #5C3D1E !important; text-align: right; display: block; font-weight: 300; }}
         </style>
         </head>
         <body>
@@ -573,7 +621,7 @@ if uploaded:
         </body>
         </html>
         """
-        components.html(card_html, height=320, scrolling=False)
+        components.html(card_html, height=card_height, scrolling=False)
 
 else:
     st.info("Upload a leaf image to start analysis.")
@@ -582,10 +630,9 @@ else:
 # ── Footer ──
 st.markdown("""
 <div class="ls-footer">
-  <p>
-    <strong>LeafScan</strong><br>
-    Developed by <strong>Nada Elmokdem</strong><br>
-    MIT License © 2026
-  </p>
+  <p class="ls-footer-app">LeafScan</p>
+  <p class="ls-footer-by">Developed by</p>
+  <p class="ls-footer-name">Nada Elmokdem</p>
+  <p class="ls-footer-license">MIT License © 2026</p>
 </div>
 """, unsafe_allow_html=True)
